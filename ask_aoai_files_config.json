@@ -3,7 +3,8 @@
         ".git",
         ".vscode",
         "__pycache__",
-        "README.md"
+        "README.md",
+        "test_gpt.py"
     ],
     "files": [
         {
@@ -27,12 +28,6 @@
         {
             "filename": "response.md",
             "description": "以下のファイルは、ユーザーが受け取った回答を記録するためのものです。",
-            "filepath": ".",
-            "include_in_input": false
-        },
-        {
-            "filename": "test_gpt.py",
-            "description": "以下のスクリプトは、GPT のテストを行うための機能を有します。",
             "filepath": ".",
             "include_in_input": false
         },
