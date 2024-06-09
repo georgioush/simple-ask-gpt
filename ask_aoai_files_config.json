@@ -1,0 +1,28 @@
+{
+    "files": [
+        {
+            "filename": "ask_gpt.py",
+            "description": "以下のスクリプトは GPT に質問を行うための機能を有します。",
+            "filepath": ".",
+            "include_in_input": false
+        },
+        {
+            "filename": "generate_input_from_json.py",
+            "description": "以下のスクリプトは JSON データを読み出し、入力用の変数を生成する機能を有します。",
+            "filepath": ".",
+            "include_in_input": false
+        },
+        {
+            "filename": "ask_aoai_files_config.json",
+            "description": "以下のファイルは、AOAI に入力するファイルの設定を記述しています。",
+            "filepath": ".",
+            "include_in_input": true
+        },
+        {
+            "filename": "history.md",
+            "description": "以下のファイルは、私が聞いた質問とあなたが過去に答えた回答です。",
+            "filepath": ".",
+            "include_in_input": true
+        }
+    ]
+}
