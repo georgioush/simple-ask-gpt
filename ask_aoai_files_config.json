@@ -5,14 +5,16 @@
         "__pycache__",
         "README.md",
         "test_gpt.py",
-        "archive"
+        "archive",
+        "response.md",
+        "question.md"
     ],
     "files": [
         {
             "filename": "ask_gpt.py",
             "description": "以下のスクリプトは GPT に質問を行うための機能を有します。",
             "filepath": ".",
-            "include_in_input": false
+            "include_in_input": true
         },
         {
             "filename": "file_operations.py",
@@ -24,31 +26,19 @@
             "filename": "generate_input_from_json.py",
             "description": "以下のスクリプトは JSON データを読み出し、入力用の変数を生成する機能を有します。",
             "filepath": ".",
-            "include_in_input": false
+            "include_in_input": true
         },
         {
             "filename": "history.md",
             "description": "以下のファイルは、私が聞いた質問とあなたが過去に答えた回答です。",
             "filepath": ".",
-            "include_in_input": false
+            "include_in_input": true
         },
         {
             "filename": "parse_source_code.py",
             "description": "以下のスクリプトは、ソースコードを解析するためのものです。",
             "filepath": ".",
             "include_in_input": true
-        },
-        {
-            "filename": "question.md",
-            "description": "以下のファイルは、ユーザーが質問を記述するためのものです。",
-            "filepath": ".",
-            "include_in_input": false
-        },
-        {
-            "filename": "response.md",
-            "description": "以下のファイルは、ユーザーが受け取った回答を記録するためのものです。",
-            "filepath": ".",
-            "include_in_input": false
         },
         {
             "filename": "source_code_rule.md",
