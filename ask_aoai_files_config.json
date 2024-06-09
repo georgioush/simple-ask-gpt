@@ -4,7 +4,8 @@
         ".vscode",
         "__pycache__",
         "README.md",
-        "test_gpt.py"
+        "test_gpt.py",
+        "archive"
     ],
     "files": [
         {
@@ -14,12 +15,30 @@
             "include_in_input": false
         },
         {
+            "filename": "file_operations.py",
+            "description": "以下のスクリプトは、ファイルのアーカイブおよび保存に関連する機能を有します。",
+            "filepath": ".",
+            "include_in_input": true
+        },
+        {
             "filename": "generate_input_from_json.py",
             "description": "以下のスクリプトは JSON データを読み出し、入力用の変数を生成する機能を有します。",
             "filepath": ".",
             "include_in_input": false
         },
-                {
+        {
+            "filename": "history.md",
+            "description": "以下のファイルは、私が聞いた質問とあなたが過去に答えた回答です。",
+            "filepath": ".",
+            "include_in_input": false
+        },
+        {
+            "filename": "parse_source_code.py",
+            "description": "以下のスクリプトは、ソースコードを解析するためのものです。",
+            "filepath": ".",
+            "include_in_input": true
+        },
+        {
             "filename": "question.md",
             "description": "以下のファイルは、ユーザーが質問を記述するためのものです。",
             "filepath": ".",
@@ -32,26 +51,20 @@
             "include_in_input": false
         },
         {
+            "filename": "source_code_rule.md",
+            "description": "以下のファイルは、ソースコードを出力する際のフォーマットを規定しています。",
+            "filepath": ".",
+            "include_in_input": true
+        },
+        {
             "filename": "update_files_config.py",
             "description": "以下のスクリプトは、ask_aoai_files_config.json を更新するためのものです。",
             "filepath": ".",
-            "include_in_input": false
+            "include_in_input": true
         },
         {
             "filename": "ask_aoai_files_config.json",
             "description": "以下のファイルは、AOAI に入力するファイルの設定を記述しています。",
-            "filepath": ".",
-            "include_in_input": true
-        },
-        {
-            "filename": "history.md",
-            "description": "以下のファイルは、私が聞いた質問とあなたが過去に答えた回答です。",
-            "filepath": ".",
-            "include_in_input": true
-        },
-        {
-            "filename": "source_code_rule.md",
-            "description": "以下のファイルは、ソースコードを出力する際のフォーマットを規定しています。",
             "filepath": ".",
             "include_in_input": true
         }

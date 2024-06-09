@@ -1,19 +1,20 @@
 このテキストはあなたの応答の形式を規定しているので、非常に重要です。
-あなたがソースコードを出力する際には、以下のように書いてください。
+あなたがソースコードや JSON を出力する際には、以下のように書いてください。
 
-file 名
-```ソースコード言語
+source_code_created_chat-gpt
+<file 名>
+```<ソースコード言語>
 
-ソースコードの内容
+<ソースコードの内容>
 ```
 
-例えば以下がその例です。
+以下が上記の形式を満たす例です。
 
+source_code_created_chat-gpt
 test_example.py
-```pytyon
+```python
 
 import os
 
 print("hello, world!")
 ```
-

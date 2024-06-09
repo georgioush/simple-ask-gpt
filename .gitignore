@@ -5,3 +5,4 @@ ask_aoai_files_config.json
 .vscode
 .git
 __pycache__
+archive
