@@ -69,10 +69,11 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
 
     prompt_text += (
 """
-"後述するファイルリストにおいて既存の ask_aoai_files_config.json に存在しないものを追加した ask_aoai_files_config.json を出力してください。"
-"追加するべきものが無い場合は JSON を出力せず、「追加するべきものはありません」と応答してください。"
-"新しく追加するものは include_in_input を false に指定し、description はファイル名から想定される内容を考えてください。"
-"filepath は適切に指定してください。"
+"後述するファイルリストのみで構成される ask_aoai_files_config.json を出力してください。"
+"ファイルリストに存在しないものは files から削除してください。"
+"exclude は保持してください"
+"既存の JSON を変更する必要がない場合は JSON を出力せず、「変更するべきものはありません」と応答してください。"
+"新しく追加するファイルリストは filename は パスを含まないファイル名を記載し、include_in_input を true に指定し、description はファイル名から想定される内容を考えて、filepath は適切に指定してください。"
 "ファイルリスト:"
 """
 )

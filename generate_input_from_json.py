@@ -14,10 +14,16 @@ def generate_input_from_json(config_file='ask_aoai_files_config.json'):
         if file_info['include_in_input']:
             filepath = file_info['filepath']
             filename = file_info['filename']
+            full_path = os.path.join(filepath, filename)
+
+            # ファイルが存在するか確認
+            if not os.path.exists(full_path):
+                print(f"File not found: {full_path}")
+                continue
+            
             description = "\n\n===================================="
             description += file_info['description']
             description += f" ファイル名は {filename} です。"
-            full_path = os.path.join(filepath, filename)
             
             # ファイルの内容を読み込む
             try:
@@ -26,8 +32,6 @@ def generate_input_from_json(config_file='ask_aoai_files_config.json'):
                 
                 # 変数に追加
                 result += f"{description}\n{script_content}\n"
-            except FileNotFoundError:
-                print(f"File not found: {full_path}")
             except Exception as e:
                 print(f"An error occurred while reading {full_path}: {e}")
     
