@@ -3,7 +3,6 @@
         ".git",
         ".vscode",
         "__pycache__",
-        "README.md",
         "init.py",
         "test_gpt.py",
         "archive",
@@ -15,7 +14,7 @@
             "filename": "ask_gpt.py",
             "description": "以下のスクリプトは GPT に質問を行うための機能を有します。",
             "filepath": ".",
-            "include_in_input": false
+            "include_in_input": true
         },
         {
             "filename": "file_operations.py",
@@ -45,7 +44,7 @@
             "filename": "update_files_config.py",
             "description": "以下のスクリプトは、ask_aoai_files_config.json を更新するためのものです。",
             "filepath": ".",
-            "include_in_input": false
+            "include_in_input": true
         },
         {
             "filename": "ask_aoai_files_config.json",
@@ -56,6 +55,12 @@
         {
             "filename": "source_code_rule.md",
             "description": "以下のファイルは、ソースコードを出力する際のフォーマットを規定しています。",
+            "filepath": ".",
+            "include_in_input": false
+        },
+        {
+            "filename": "README.md",
+            "description": "以下のファイルは、プロジェクトの概要と使用方法について説明するものです。",
             "filepath": ".",
             "include_in_input": false
         }
