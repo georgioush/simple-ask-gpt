@@ -66,36 +66,6 @@
             "description": "以下のスクリプトは、ask_aoai_files_config.json を更新するためのものです。",
             "filepath": ".",
             "include_in_input": true
-        },
-        {
-            "filename": "config.json",
-            "description": "以下のファイルは、開発環境で使用する設定を記述しています。",
-            "filepath": "dev",
-            "include_in_input": true
-        },
-        {
-            "filename": "markdown_processor.py",
-            "description": "以下のスクリプトは、Markdown ファイルを処理するためのものです。",
-            "filepath": "dev",
-            "include_in_input": true
-        },
-        {
-            "filename": "repository_manager.py",
-            "description": "以下のスクリプトは、リポジトリを管理するためのものです。",
-            "filepath": "dev",
-            "include_in_input": true
-        },
-        {
-            "filename": "result_saver.py",
-            "description": "以下のスクリプトは、結果を保存するためのものです。",
-            "filepath": "dev",
-            "include_in_input": true
-        },
-        {
-            "filename": "translator.py",
-            "description": "以下のスクリプトは、翻訳機能を提供するためのものです。",
-            "filepath": "dev",
-            "include_in_input": true
         }
     ]
 }
