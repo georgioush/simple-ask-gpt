@@ -18,15 +18,44 @@ client = AzureOpenAI(
     api_key=api_key,
     api_version=api_version,
     azure_endpoint=azure_endpoint,
-    )
+)
 
 # JSONファイルから入力データを生成する関数のインポート
 from generate_input_from_json import generate_input_from_json
+# ファイルから抽出したコードブロックを保存する関数のインポート
+from parse_source_code import extract_code_blocks
+from file_operations import save_parsed_files
+
 # JSONファイルから入力データを生成
 input_data = generate_input_from_json()
 
+prompt_text = (
+'''
+あなたがソースコードや JSON を出力する際には、以下のように書き、ソースコード全部を記述してください。
+
+source_code_created_chat-gpt
+<file 名>
+```<ソースコード言語>
+
+<ソースコードの内容>
+```
+
+以下が上記の形式を満たす例です。
+
+source_code_created_chat-gpt
+test_example.py
+```python
+
+import os
+
+print("hello, world!")
+```
+\n
+'''
+)
+
 with open(prompt_file_path, 'r', encoding='utf-8') as file:
-    prompt_text = file.read()
+    prompt_text += file.read()
 
 # Azure OpenAIに質問を送信する
 response_text = ""
@@ -44,7 +73,15 @@ with open(output_file_path, 'w', encoding='utf-8') as output_file:
         content = response.choices[0].message.content
         print(content, end="")
         output_file.write(content)
+        
+        # 要求されたファイルのパースと保存を行う
+        from parse_source_code import extract_code_blocks
+        parsed_files = extract_code_blocks(content)
+        if parsed_files:
+            save_parsed_files(parsed_files)
         response_text += content
+    else:
+        raise ValueError("No response content received")
 
 # 質問と回答の履歴を保存する
 history_filename = 'history.md'
@@ -53,4 +90,3 @@ with open(history_filename, 'a', encoding='utf-8') as history_file:
     history_file.write(f"Question:\n{prompt_text}\n")
     history_file.write(f"Response:\n{response_text}\n")
     history_file.write("\n" + "="*50 + "\n\n")
-

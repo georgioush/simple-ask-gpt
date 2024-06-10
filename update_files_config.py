@@ -4,6 +4,7 @@ import re
 import shutil
 from datetime import datetime
 from openai import AzureOpenAI
+from file_operations import save_to_temp_file, replace_file_on_exit
 
 # 環境変数から設定を取得
 api_key = os.getenv("AZURE_OPENAI_API_KEY")
@@ -21,84 +22,73 @@ client = AzureOpenAI(
 output_file_path = "response.md"
 
 def parse_output(content):
-    # ファイル名とその内容を抽出するためのパターン
     pattern = r'^(.*?)\n```(.*?)\n(.*?)\n```'
     matches = re.findall(pattern, content, re.DOTALL | re.MULTILINE)
     
-    # パースした内容を返す
-    files = []
-    for match in matches:
-        filename = match[0].strip()
-        language = match[1].strip()
-        code = match[2].strip()
-        files.append((filename, language, code))
-
+    files = [(match[0].strip(), match[1].strip(), match[2].strip()) for match in matches]
     return files
 
-def archive_file(filepath):
-    # アーカイブディレクトリが存在しない場合は作成する
-    if not os.path.exists('archive'):
-        os.makedirs('archive')
+def update_files(parsed_files):
+    for filename, code in parsed_files:
+        # 新しいファイル内容をテンポラリファイルに保存
+        temp_filepath = save_to_temp_file(filename, code)
 
-    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-    archive_path = f'archive/{os.path.basename(filepath)}_{timestamp}'
-    shutil.copy(filepath, archive_path)
-    return archive_path
-
-def save_file(filename, content):
-    with open(filename, 'w') as file:
-        file.write(content)
-
-def update_files(content):
-    files = parse_output(content)
-    
-    for filename, language, code in files:
-        if os.path.exists(filename):
-            # ファイルが存在する場合はアーカイブする
-            archive_file(filename)
-        
-        # ファイルを新しい内容で上書き保存
-        save_file(filename, code)
-        print(f'{filename} を更新しました。')
+        # プログラム終了時にテンポラリファイルを既存ファイルに置き換える
+        replace_file_on_exit(filename, temp_filepath)
 
 def update_files_config(input_json='ask_aoai_files_config.json'):
     with open(input_json, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
 
-    # 除外するディレクトリやファイルを取得
+    # 除外するべきファイルを除いた、保持するべきリストを用意する
     exclude_items = set(data.get('exclude', []))
 
-    # カレントディレクトリからファイルリストを生成
     def get_files(start_path='.'):
         files_to_include = []
         for root, dirs, filenames in os.walk(start_path):
-            # Exclude specific directories
             dirs[:] = [d for d in dirs if d not in exclude_items]
 
             for filename in filenames:
                 filepath = os.path.relpath(os.path.join(root, filename), start_path)
-                # Exclude specific files
                 if any(exclude in filepath for exclude in exclude_items):
                     continue
                 files_to_include.append(filepath)
         return files_to_include
 
-    # カレントディレクトリからファイルリストを生成
     some_files = get_files()
 
-    # JSONファイルから入力データを生成する関数のインポート
     from generate_input_from_json import generate_input_from_json
-    # JSONファイルから入力データを生成
     input_data = generate_input_from_json()
 
-    # プロンプトテキストを作成
     prompt_text = (
-        "以下のファイルリストを含めた JSON ファイルである ask_aoai_files_config.json を出力してください。\n"
-        "追加するべきものが無い場合はその旨を述べてください。\n"
-        "新しく追加するものは include_in_input を true に指定し、description はファイル名から想定される内容を考えてください。\n"
-        "filepath は適切に指定してください。\n"
-        "ファイルリスト:\n"
-    )
+"""
+あなたがソースコードや JSON を出力する際には、以下のように書き、ソースコード全部を記述してください。
+
+source_code_created_chat-gpt
+<file 名>
+```<ソースコード言語>
+
+<ソースコードの内容>
+```
+
+以下が上記の形式を満たす例です。
+
+source_code_created_chat-gpt
+test_example.py
+```python
+
+import os
+
+print("hello, world!")
+```
+
+"後述するファイルリストにおいて既存の ask_aoai_files_config.json に存在しないものを追加した ask_aoai_files_config.json を出力してください。\n"
+"追加するべきものが無い場合は JSON を出力せず、「追加するべきものはありません」と応答してください。\n"
+"新しく追加するものは include_in_input を false に指定し、description はファイル名から想定される内容を考えてください。\n"
+"filepath は適切に指定してください。\n"
+"ファイルリスト:\n"
+"""
+)
     for file in some_files:
         prompt_text += file + "\n"
 
@@ -112,27 +102,29 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
                 ],
             )
 
-            if response.choices[0].message.content is not None:
+            if response.choices[0].message.content:
                 content = response.choices[0].message.content
                 print(content, end="")
                 output_file.write(content)
-                # 解析してファイル保存
+
+                # ここのロジックで、ファイルのアップデートをオコなう
                 from parse_source_code import extract_code_blocks
-                from file_operations import save_parsed_files
                 parsed_files = extract_code_blocks(content)
                 if not parsed_files:
-                    print("There is no matched files")
-                save_parsed_files(parsed_files)
+                    print("一致するファイルはありませんでした")
+                else:
+                    update_files(parsed_files)
+
             else:
                 raise ValueError("No response content received")
         except Exception as e:
             print(f"An error occurred: {e}")
             output_file.write(f"An error occurred: {e}")
 
-    # 質問と回答の履歴を保存する
     history_filename = 'history.md'
     with open(history_filename, 'a', encoding='utf-8') as history_file:
         history_file.write(f"Date: {datetime.now().isoformat()}\n")
+        history_file.write(f"System Input:\n{input_data}\n")
         history_file.write(f"Question:\n{prompt_text}\n")
         if 'content' in locals():
             history_file.write(f"Response:\n{content}\n")
@@ -140,8 +132,6 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
             history_file.write(f"Response: Error occurred - {e}\n")
         history_file.write("\n" + "="*50 + "\n\n")
 
-# スクリプトが直接実行された場合のみ動作するようにする
 if __name__ == "__main__":
-    # カレントディレクトリをスクリプトの場所に変更
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     update_files_config()
