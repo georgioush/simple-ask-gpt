@@ -7,7 +7,9 @@
         "test_gpt.py",
         "archive",
         "response.md",
-        "question.md"
+        "question.md",
+        "dev/.gitkeep",
+        "dev/.git"
     ],
     "files": [
         {

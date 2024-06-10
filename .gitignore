@@ -6,3 +6,5 @@ ask_aoai_files_config.json
 .git
 __pycache__
 archive
+/dev/*
+!/dev/.gitkeep
