@@ -29,30 +29,12 @@ from file_operations import save_parsed_files
 # JSONファイルから入力データを生成
 input_data = generate_input_from_json()
 
-prompt_text = (
-'''
-あなたがソースコードや JSON を出力する際には、以下のように書き、ソースコード全部を記述してください。
 
-source_code_created_chat-gpt
-<file 名>
-```<ソースコード言語>
+# md ファイルの内容を変数に読み込む
+with open("source_code_rule.md", 'r', encoding='utf-8') as source_code_rule:
+    rule = source_code_rule.read()
 
-<ソースコードの内容>
-```
-
-以下が上記の形式を満たす例です。
-
-source_code_created_chat-gpt
-test_example.py
-```python
-
-import os
-
-print("hello, world!")
-```
-\n
-'''
-)
+prompt_text = rule
 
 with open(prompt_file_path, 'r', encoding='utf-8') as file:
     prompt_text += file.read()

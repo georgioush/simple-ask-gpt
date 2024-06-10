@@ -46,13 +46,14 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
     def get_files(start_path='.'):
         files_to_include = []
         for root, dirs, filenames in os.walk(start_path):
-            dirs[:] = [d for d in dirs if d not in exclude_items]
+            # ディレクトリの除外フィルタリング
+            dirs[:] = [d for d in dirs if not any(exclude in os.path.join(root, d) for exclude in exclude_items)]
 
             for filename in filenames:
                 filepath = os.path.relpath(os.path.join(root, filename), start_path)
-                if any(exclude in filepath for exclude in exclude_items):
-                    continue
-                files_to_include.append(filepath)
+                # ファイルの除外フィルタリング
+                if not any(exclude in filepath for exclude in exclude_items):
+                    files_to_include.append(filepath)
         return files_to_include
 
     some_files = get_files()
@@ -60,33 +61,19 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
     from generate_input_from_json import generate_input_from_json
     input_data = generate_input_from_json()
 
-    prompt_text = (
+    # md ファイルの内容を変数に読み込む
+    with open("source_code_rule.md", 'r', encoding='utf-8') as source_code_rule:
+        rule = source_code_rule.read()
+
+    prompt_text = rule
+
+    prompt_text += (
 """
-あなたがソースコードや JSON を出力する際には、以下のように書き、ソースコード全部を記述してください。
-
-source_code_created_chat-gpt
-<file 名>
-```<ソースコード言語>
-
-<ソースコードの内容>
-```
-
-以下が上記の形式を満たす例です。
-
-source_code_created_chat-gpt
-test_example.py
-```python
-
-import os
-
-print("hello, world!")
-```
-
-"後述するファイルリストにおいて既存の ask_aoai_files_config.json に存在しないものを追加した ask_aoai_files_config.json を出力してください。\n"
-"追加するべきものが無い場合は JSON を出力せず、「追加するべきものはありません」と応答してください。\n"
-"新しく追加するものは include_in_input を false に指定し、description はファイル名から想定される内容を考えてください。\n"
-"filepath は適切に指定してください。\n"
-"ファイルリスト:\n"
+"後述するファイルリストにおいて既存の ask_aoai_files_config.json に存在しないものを追加した ask_aoai_files_config.json を出力してください。"
+"追加するべきものが無い場合は JSON を出力せず、「追加するべきものはありません」と応答してください。"
+"新しく追加するものは include_in_input を false に指定し、description はファイル名から想定される内容を考えてください。"
+"filepath は適切に指定してください。"
+"ファイルリスト:"
 """
 )
     for file in some_files:
@@ -107,7 +94,7 @@ print("hello, world!")
                 print(content, end="")
                 output_file.write(content)
 
-                # ここのロジックで、ファイルのアップデートをオコなう
+                # ここのロジックで、ファイルのアップデートを行う
                 from parse_source_code import extract_code_blocks
                 parsed_files = extract_code_blocks(content)
                 if not parsed_files:

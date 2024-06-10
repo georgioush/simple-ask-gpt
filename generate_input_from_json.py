@@ -14,7 +14,8 @@ def generate_input_from_json(config_file='ask_aoai_files_config.json'):
         if file_info['include_in_input']:
             filepath = file_info['filepath']
             filename = file_info['filename']
-            description = file_info['description']
+            description = "\n\n===================================="
+            description += file_info['description']
             description += f" ファイル名は {filename} です。"
             full_path = os.path.join(filepath, filename)
             
