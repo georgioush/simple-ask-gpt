@@ -29,7 +29,6 @@ from file_operations import save_parsed_files
 # JSONファイルから入力データを生成
 input_data = generate_input_from_json()
 
-
 # md ファイルの内容を変数に読み込む
 with open("source_code_rule.md", 'r', encoding='utf-8') as source_code_rule:
     rule = source_code_rule.read()
@@ -57,7 +56,6 @@ with open(output_file_path, 'w', encoding='utf-8') as output_file:
         output_file.write(content)
         
         # 要求されたファイルのパースと保存を行う
-        from parse_source_code import extract_code_blocks
         parsed_files = extract_code_blocks(content)
         if parsed_files:
             save_parsed_files(parsed_files)

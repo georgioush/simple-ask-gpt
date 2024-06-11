@@ -13,9 +13,10 @@ def archive_file(filepath):
     return archive_path
 
 def save_parsed_files(files):
-    for filename, code in files:
-        temp_filepath = save_to_temp_file(filename, code)
-        replace_file_on_exit(filename, temp_filepath)
+    for path, filename, code in files:
+        full_filepath = os.path.join(path, filename)
+        temp_filepath = save_to_temp_file(full_filepath, code)
+        replace_file_on_exit(full_filepath, temp_filepath)
 
 def save_to_temp_file(original_filepath, new_content):
     temp_filepath = original_filepath + ".tmp"

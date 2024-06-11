@@ -21,20 +21,17 @@ client = AzureOpenAI(
 
 output_file_path = "response.md"
 
-def parse_output(content):
-    pattern = r'^(.*?)\n```(.*?)\n(.*?)\n```'
-    matches = re.findall(pattern, content, re.DOTALL | re.MULTILINE)
-    
-    files = [(match[0].strip(), match[1].strip(), match[2].strip()) for match in matches]
-    return files
+# parse_source_code.py から関数のインポート
+from parse_source_code import extract_code_blocks
 
 def update_files(parsed_files):
-    for filename, code in parsed_files:
+    for path, filename, code in parsed_files:
+        full_filepath = os.path.join(path, filename)
         # 新しいファイル内容をテンポラリファイルに保存
-        temp_filepath = save_to_temp_file(filename, code)
+        temp_filepath = save_to_temp_file(full_filepath, code)
 
         # プログラム終了時にテンポラリファイルを既存ファイルに置き換える
-        replace_file_on_exit(filename, temp_filepath)
+        replace_file_on_exit(full_filepath, temp_filepath)
 
 def update_files_config(input_json='ask_aoai_files_config.json'):
     with open(input_json, 'r', encoding='utf-8') as json_file:
@@ -72,7 +69,7 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
 "後述するファイルリストのみで構成される ask_aoai_files_config.json を出力してください。"
 "ファイルリストに存在しないものは files から削除してください。"
 "exclude は保持してください"
-"新しく追加するファイルリストは filename は パスを含まないファイル名を記載し、include_in_input を true に指定し、description はファイル名から想定される内容を考えて、filepath は適切に指定してください。"
+"新しく追加するファイルリストは filename は パスを含まないファイル名を記載し、include_in_input を true に指定し、description はファイル名から想定される内容を考えて、filepath は適切なパスを指定してください。"
 "ファイルリスト:"
 """
 )
@@ -95,7 +92,6 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
                 output_file.write(content)
 
                 # ここのロジックで、ファイルのアップデートを行う
-                from parse_source_code import extract_code_blocks
                 parsed_files = extract_code_blocks(content)
                 if not parsed_files:
                     print("一致するファイルはありませんでした")
