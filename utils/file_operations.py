@@ -34,8 +34,5 @@ def replace_file_on_exit(original_filepath, temp_filepath):
             print(f"{original_filepath} を更新しました。")
         except Exception as e:
             print(f"Error during file replacement: {e}")
-        finally:
-            if os.path.exists(temp_filepath):
-                os.remove(temp_filepath)  # Clean up temp file if it still exists
 
     atexit.register(on_exit)

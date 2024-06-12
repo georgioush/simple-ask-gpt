@@ -3,8 +3,8 @@
 「パス」は既存のものであれば ask_aoai_files_config.json の filepath にそろえてください。
 
 source_code_created_chat-gpt
-<ファイル名>
 <パス>
+<ファイル名>
 ```<ソースコード言語>
 
 <ソースコードの内容>

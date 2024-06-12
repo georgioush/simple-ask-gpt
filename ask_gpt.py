@@ -21,10 +21,10 @@ client = AzureOpenAI(
 )
 
 # JSONファイルから入力データを生成する関数のインポート
-from generate_input_from_json import generate_input_from_json
+from utils.input_generator import generate_input_from_json
 # ファイルから抽出したコードブロックを保存する関数のインポート
-from parse_source_code import extract_code_blocks
-from file_operations import save_parsed_files
+from utils.code_parser import extract_code_blocks
+from utils.file_operations import save_parsed_files
 
 # JSONファイルから入力データを生成
 input_data = generate_input_from_json()
