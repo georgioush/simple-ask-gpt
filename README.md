@@ -26,6 +26,18 @@
    ```
 3. 次に、`ask_gpt.py`を実行するだけです。
 
+4. `init.py`スクリプトを使って Git のインデックスを管理することもできます。
+
+   * `git update-index --assume-unchanged` を設定:
+     ```sh
+     python init.py config ignore
+     ```
+
+   * `git update-index --no-assume-unchanged` を設定:
+     ```sh
+     python init.py config ack
+     ```
+
 ## 現状のデザイン
 
 現状のデザインとして、開発したいプロジェクトを`dev`フォルダに入れることで、その中で開発を進めながら、`ask_gpt.py`などのスクリプトを利用してコードを自動生成できるようになっています。`dev`フォルダには、あなたのプロジェクトファイルを配置し、以下の主要なクラスデザインに基づいて拡張や修正を行うことができます：
