@@ -53,6 +53,9 @@ python init.py
    }
    ```
 
+**なおデフォルトの JSON では history.md は読み込まないように指定しています。**
+
+
 3. 次に、`ask_gpt.py`を実行します。
 
 ```sh
