@@ -19,6 +19,8 @@ def save_parsed_files(files):
         replace_file_on_exit(full_filepath, temp_filepath)
 
 def save_to_temp_file(original_filepath, new_content):
+    # フォルダが存在しない場合には作成する
+    os.makedirs(os.path.dirname(original_filepath), exist_ok=True)
     temp_filepath = original_filepath + ".tmp"
     with open(temp_filepath, 'w', encoding='utf-8') as temp_file:
         temp_file.write(new_content)
