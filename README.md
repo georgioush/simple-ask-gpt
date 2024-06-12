@@ -2,12 +2,40 @@
 
 ## 初期設定
 
-`init.py`を最初に実行してください。このスクリプトは、`question.md`や他のいくつかのファイルを生成します。
+`init.py`を最初に実行してください。このスクリプトは、`question.md`、`response.md`、`history.md`や他のいくつかのファイルを生成します。
+
+```sh
+python init.py
+```
+
+`init.py`実行後に生成されるファイルは次の通りです：
+- `question.md`: このファイルには質問内容を記述します。
+- `response.md`: このファイルには回答内容を記述します。
+- `history.md`: このファイルは、私が聞いた質問とあなたが過去に答えた回答を記録します。
+
+
+### 補足
+
+初期設定として ask_aoai_files_config.json は git で追えないようにしています。
+
+4. `init.py`スクリプトを使って Git のインデックスを管理することもできます。
+
+    改めて JSON も Git に追わせたい場合は以下。
+   * `git update-index --assume-unchanged  ask_aoai_files_config.json` を設定:
+     ```sh
+     python init.py config ignore
+     ```
+
+    改めて JSON も Git に追わせたくない場合は以下。
+   * `git update-index --no-assume-unchanged  ask_aoai_files_config.json` を設定:
+     ```sh
+     python init.py config ack
+     ```
 
 ## 使用方法
 
 1. `question.md`に質問を記述します。
-2. `ask_aoai_files_config.json`内で、`"include_in_input"` フィールドを変更することで、入力として使用するソースコードを管理します。具体的には、特定のファイルを入力に含めたい場合は `true` に、含めたくない場合は `false` に設定します。
+2. `ask_aoai_files_config.json`内で、`"include_in_input"` フィールドを変更することで、入力として使用するソースコードを管理します。特定のファイルを入力に含めた い場合は `true` に、含めたくない場合は `false` に設定します。
 
    例:
    ```json
@@ -24,19 +52,12 @@
        "include_in_input": false
    }
    ```
-3. 次に、`ask_gpt.py`を実行するだけです。
 
-4. `init.py`スクリプトを使って Git のインデックスを管理することもできます。
+3. 次に、`ask_gpt.py`を実行します。
 
-   * `git update-index --assume-unchanged` を設定:
-     ```sh
-     python init.py config ignore
-     ```
-
-   * `git update-index --no-assume-unchanged` を設定:
-     ```sh
-     python init.py config ack
-     ```
+```sh
+python ask_gpt.py
+```
 
 ## 現状のデザイン
 
@@ -45,6 +66,10 @@
 ## 自動更新
 
 `update_files_config.py`を実行することで、JSONファイルを自動的に更新できます。このスクリプトはディレクトリを検索し、`ask_aoai_files_config.json`の"exclude"に記載されていない新しいファイルを見つけます。その後、GPTにJSONスクリプトの生成を依頼し、応答を解析して、`ask_aoai_files_config.json`を置き換えます。
+
+```sh
+python update_files_config.py
+```
 
 ## ファイル説明
 
