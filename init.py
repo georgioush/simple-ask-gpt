@@ -40,13 +40,18 @@ def update_files_config(mode):
         for file_info in config_data['files']:
             if file_info['filename'] == 'history.md':
                 file_info['include_in_input'] = False
+    elif mode == "ignore":
+        run_git_command("git update-index --assume-unchanged ask_aoai_files_config.json")
+    elif mode == "ack" or mode == "noignore":
+        run_git_command("git update-index --no-assume-unchanged ask_aoai_files_config.json")
     else:
         print(f"無効なモード: {mode}")
         return
     
-    with open(config_file, 'w', encoding='utf-8') as file:
-        json.dump(config_data, file, ensure_ascii=False, indent=4)
-    print(f"{config_file} が {mode} モードで更新されました。")
+    if mode not in ["ignore", "ack", "noignore"]:
+        with open(config_file, 'w', encoding='utf-8') as file:
+            json.dump(config_data, file, ensure_ascii=False, indent=4)
+        print(f"{config_file} が {mode} モードで更新されました。")
 
 def main():
     create_file_if_not_exists("question.md", "このファイルには質問内容を記述します。\n")
@@ -61,7 +66,7 @@ if __name__ == "__main__":
             mode = os.sys.argv[2]
             update_files_config(mode)
         else:
-            print("モードが指定されていません。'dev', 'all', 'history', 'nohistory' のいずれかを指定してください。")
+            print("モードが指定されていません。'dev', 'all', 'history', 'nohistory', 'ignore', 'ack', 'noignore' のいずれかを指定してください。")
     else:
         main()
         input("Press Enter to continue...")
