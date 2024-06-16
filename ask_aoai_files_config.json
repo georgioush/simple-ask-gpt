@@ -6,9 +6,11 @@
         "archive",
         "response.md",
         "question.md",
-        "dev/.gitkeep",
-        "dev/.git",
-        "dev/.gitignore"
+        "utils/__pycache__",
+        "dev/repos",
+        "dev/.git"
+    ],
+    "include_files": [
     ],
     "files": [
         {
@@ -67,19 +69,19 @@
         },
         {
             "filename": "code_parser.py",
-            "description": "以下のファイルは、コードを解析するためのユーティリティです。",
+            "description": "コードを解析するスクリプトです。",
             "filepath": "utils",
             "include_in_input": true
         },
         {
             "filename": "file_operations.py",
-            "description": "以下のスクリプトは、ファイルのアーカイブおよび保存に関連する機能を有します。",
+            "description": "ファイル操作を行うスクリプトです。",
             "filepath": "utils",
             "include_in_input": true
         },
         {
             "filename": "input_generator.py",
-            "description": "以下のスクリプトは、入力データを生成するためのものです。",
+            "description": "入力データを生成するスクリプトです。",
             "filepath": "utils",
             "include_in_input": true
         }
