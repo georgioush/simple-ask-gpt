@@ -20,31 +20,35 @@ def update_files(parsed_files):
         temp_filepath = save_to_temp_file(full_filepath, code)
         replace_file_on_exit(full_filepath, temp_filepath)
 
-def should_include(path, include_files):
+def should_include(path, include_patterns):
     """
     明示的に含めるべきパターンと一致するか確認
     """
-    return any(os.path.abspath(path).startswith(os.path.abspath(pattern)) for pattern in include_files)
+    return any(os.path.abspath(path).startswith(os.path.abspath(pattern)) for pattern in include_patterns)
 
-def get_files(start_path, exclude_patterns, include_files):
+def get_files(start_path, exclude_patterns, include_patterns):
     """
     指定されたstart_pathからファイルを再帰的に取得します
     """
     files_to_include = []
+    include_patterns_absolute = {os.path.abspath(pattern) for pattern in include_patterns}
+
     for root, dirs, filenames in os.walk(start_path):
-        # 除外パターンに一致するディレクトリは探索しない。ただし明示的に含まれている場合を除く。
-        dirs[:] = [d for d in dirs if not any(os.path.abspath(os.path.join(root, d)).startswith(os.path.abspath(pattern)) and not should_include(os.path.join(root, d), include_files) for pattern in exclude_patterns)]
+        # 除外パターンに一致するディレクトリは探索しない。明示的に含まれている場合を除く。
+        dirs[:] = [d for d in dirs if not any(os.path.abspath(os.path.join(root, d)).startswith(os.path.abspath(pattern)) for pattern in exclude_patterns) or should_include(os.path.join(root, d), include_patterns)]
 
         for filename in filenames:
             filepath = os.path.join(root, filename)
-            if should_include(filepath, include_files) or not any(os.path.abspath(filepath).startswith(os.path.abspath(pattern)) for pattern in exclude_patterns):
+            if should_include(filepath, include_patterns_absolute) or not any(os.path.abspath(filepath).startswith(os.path.abspath(pattern)) for pattern in exclude_patterns):
                 files_to_include.append(filepath)
-    
-    # include_filesに含まれるパスを再確認し、リストに追加
-    for pattern in include_files:
+
+    # include_files に指定されたファイルを追加
+    for pattern in include_patterns:
         if os.path.exists(pattern):
-            files_to_include.append(pattern)
-    
+            abs_pattern = os.path.abspath(pattern)
+            if abs_pattern not in files_to_include:
+                files_to_include.append(pattern)
+
     return files_to_include
 
 def update_files_config(input_json='ask_aoai_files_config.json'):
@@ -52,9 +56,9 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
         data = json.load(json_file)
 
     exclude_patterns = set(data.get('exclude', []))
-    include_files = set(data.get('include_files', []))
+    include_patterns = set(data.get('include_files', []))
 
-    all_files = get_files(".", exclude_patterns, include_files)
+    all_files = get_files(".", exclude_patterns, include_patterns)
 
     # System Input の設定
     input_data = generate_input_from_json()
@@ -70,7 +74,7 @@ def update_files_config(input_json='ask_aoai_files_config.json'):
     prompt_text += code_rule + update_rule
 
     for file in all_files:
-        prompt_text += file + "\n"
+        prompt_text += f"{file}\n"
 
     with open("response.md", 'w', encoding='utf-8') as output_file:
         try:
