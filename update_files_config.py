@@ -24,41 +24,65 @@ def should_include(path, include_patterns):
     """
     明示的に含めるべきパターンと一致するか確認
     """
-    return any(os.path.abspath(path).startswith(os.path.abspath(pattern)) for pattern in include_patterns)
+    rel_path = os.path.relpath(path)
+    for pattern in include_patterns:
+        if rel_path.startswith(os.path.relpath(pattern)) or pattern in rel_path:
+            return True
+    return False
 
-def get_files(start_path, exclude_patterns, include_patterns):
+def should_include_file_in_folders(file_path, include_folders):
+    """
+    ファイルが指定されたフォルダに含まれるかどうかを確認
+    """
+    for folder in include_folders:
+        if file_path.startswith(os.path.relpath(folder)):
+            return True
+    return False
+
+def get_files(start_path, exclude_folders, exclude_files, include_files, include_folders):
     """
     指定されたstart_pathからファイルを再帰的に取得します
     """
     files_to_include = []
-    include_patterns_absolute = {os.path.abspath(pattern) for pattern in include_patterns}
+    include_files_relative = {os.path.relpath(file) for file in include_files}
 
     for root, dirs, filenames in os.walk(start_path):
-        # 除外パターンに一致するディレクトリは探索しない。明示的に含まれている場合を除く。
-        dirs[:] = [d for d in dirs if not any(os.path.abspath(os.path.join(root, d)).startswith(os.path.abspath(pattern)) for pattern in exclude_patterns) or should_include(os.path.join(root, d), include_patterns)]
+        # 除外パターンに一致するディレクトリをフィルタリング
+        filtered_dirs = []
+        for d in dirs:
+            dir_path = os.path.relpath(os.path.join(root, d))
+            if (not any(dir_path.startswith(os.path.relpath(pattern)) for pattern in exclude_folders) or 
+                should_include(dir_path, include_files)):
+                filtered_dirs.append(d)
+        dirs[:] = filtered_dirs
 
+        # 含むべきファイルを探索
         for filename in filenames:
-            filepath = os.path.join(root, filename)
-            if should_include(filepath, include_patterns_absolute) or not any(os.path.abspath(filepath).startswith(os.path.abspath(pattern)) for pattern in exclude_patterns):
+            filepath = os.path.relpath(os.path.join(root, filename))
+            if (should_include(filepath, include_files_relative) or 
+                not any(filepath.startswith(os.path.relpath(pattern)) for pattern in exclude_files) or
+                should_include_file_in_folders(filepath, include_folders)):
                 files_to_include.append(filepath)
-
-    # include_files に指定されたファイルを追加
-    for pattern in include_patterns:
+    
+    # 明示的に指定されたファイルをリストに追加
+    for pattern in include_files:
         if os.path.exists(pattern):
-            abs_pattern = os.path.abspath(pattern)
-            if abs_pattern not in files_to_include:
-                files_to_include.append(pattern)
-
+            rel_pattern = os.path.relpath(pattern)
+            if rel_pattern not in files_to_include:
+                files_to_include.append(rel_pattern)
+        
     return files_to_include
 
 def update_files_config(input_json='ask_aoai_files_config.json'):
     with open(input_json, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
 
-    exclude_patterns = set(data.get('exclude', []))
-    include_patterns = set(data.get('include_files', []))
+    exclude_folders = set(data.get('exclude_folder', []))
+    exclude_files = set(data.get('exclude_files', []))
+    include_files = set(data.get('include_files', []))
+    include_folders = set(data.get('include_folder', []))
 
-    all_files = get_files(".", exclude_patterns, include_patterns)
+    all_files = get_files(".", exclude_folders, exclude_files, include_files, include_folders)
 
     # System Input の設定
     input_data = generate_input_from_json()

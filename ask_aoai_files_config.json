@@ -1,14 +1,19 @@
 {
-    "exclude": [
+    "exclude_folder": [
         ".git",
         ".vscode",
         "__pycache__",
         "archive",
-        "response.md",
-        "question.md",
         "utils/__pycache__",
         "dev/repos",
         "dev/.git"
+    ],
+    "exclude_files": [
+        ".gitignore",
+        "question.md",
+        "response.md"
+    ],
+    "include_folder": [
     ],
     "include_files": [
     ],
@@ -21,67 +26,67 @@
         },
         {
             "filename": "ask_gpt.py",
-            "description": "以下のスクリプトは GPT に質問を行うための機能を有します。",
+            "description": "GPT-3.5への問い合わせスクリプト。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "history.md",
-            "description": "以下のファイルは、私が聞いた質問とあなたが過去に答えた回答です。",
+            "description": "プロジェクトの変更履歴。",
             "filepath": ".",
             "include_in_input": false
         },
         {
             "filename": "init.py",
-            "description": "このスクリプトは、`question.md`や他のファイルを生成します。",
+            "description": "初期設定や起動用スクリプト。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "README.md",
-            "description": "以下のファイルは、プロジェクトの概要と使用方法について説明するものです。",
+            "description": "プロジェクトの概要と手順。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "source_code_rule.md",
-            "description": "以下のファイルは、ソースコードを出力する際のフォーマットを規定しています。",
+            "description": "ソースコードの規約。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "test_gpt.py",
-            "description": "このスクリプトは、GPTをテストするためのものです。",
+            "description": "GPT-3.5用のテストスクリプト。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "update_files_config.py",
-            "description": "以下のスクリプトは、ask_aoai_files_config.json を更新するためのものです。",
+            "description": "ask_aoai_files_config.jsonの更新スクリプト。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "update_files_rule.md",
-            "description": "以下のファイルは、ファイルの更新ルールを記述しています。",
+            "description": "ファイルの更新についての規約。",
             "filepath": ".",
             "include_in_input": true
         },
         {
             "filename": "code_parser.py",
-            "description": "コードを解析するスクリプトです。",
+            "description": "コードを解析するスクリプト。",
             "filepath": "utils",
             "include_in_input": true
         },
         {
             "filename": "file_operations.py",
-            "description": "ファイル操作を行うスクリプトです。",
+            "description": "ファイル操作を行うスクリプト。",
             "filepath": "utils",
             "include_in_input": true
         },
         {
             "filename": "input_generator.py",
-            "description": "入力データを生成するスクリプトです。",
+            "description": "入力データを生成するスクリプト。",
             "filepath": "utils",
             "include_in_input": true
         }

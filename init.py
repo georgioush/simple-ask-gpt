@@ -44,6 +44,10 @@ def update_files_config(mode):
         run_git_command("git update-index --assume-unchanged ask_aoai_files_config.json")
     elif mode == "ack" or mode == "noignore":
         run_git_command("git update-index --no-assume-unchanged ask_aoai_files_config.json")
+    elif mode == "nondev":
+        for file_info in config_data['files']:
+            if file_info['filepath'].startswith('dev'):
+                file_info['include_in_input'] = False
     else:
         print(f"無効なモード: {mode}")
         return
@@ -66,7 +70,7 @@ if __name__ == "__main__":
             mode = os.sys.argv[2]
             update_files_config(mode)
         else:
-            print("モードが指定されていません。'dev', 'all', 'history', 'nohistory', 'ignore', 'ack', 'noignore' のいずれかを指定してください。")
+            print("モードが指定されていません。'dev', 'all', 'history', 'nohistory', 'ignore', 'ack', 'noignore', 'nondev' のいずれかを指定してください。")
     else:
         main()
         input("Press Enter to continue...")
