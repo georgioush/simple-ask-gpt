@@ -13,6 +13,23 @@ python init.py
 - `response.md`: このファイルには回答内容を記述します。
 - `history.md`: このファイルは、私が聞いた質問とあなたが過去に答えた回答を記録します。
 
+
+## 初期設定2
+
+dev フォルダに自分が操作したい github のレポジトリを入れる
+
+```sh
+git clone https://github.com/\<user_name\>/\<repository_name\> dev
+```
+
+.vscode をコピーして、OpenAI へのリクエストが送れるように準備を行い、以下を実行する。
+
+```sh
+update_files_config.py
+./init.py config ignore
+./init.py config dev
+```
+
 ### 補足
 
 初期設定として ask_aoai_files_config.json は git で追えないようにしています。
