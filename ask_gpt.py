@@ -48,6 +48,7 @@ with open(output_file_path, 'w', encoding='utf-8') as output_file:
             {"role": "system", "content": input_data},
             {"role": "user", "content": prompt_text},
         ],
+        top_p=0.1,
     )
 
     if response.choices[0].message.content is not None:
