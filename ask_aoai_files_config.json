@@ -11,7 +11,9 @@
     "exclude_files": [
         ".gitignore",
         "question.md",
-        "response.md"
+        "response.md",
+        "requirements.txt",
+        "setup.bat"
     ],
     "include_folder": [
     ],
