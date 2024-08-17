@@ -6,7 +6,9 @@
         "archive",
         "utils/__pycache__",
         "dev/repos",
-        "dev/.git"
+        "dev/.git",
+        "dev/node_modules",
+        "venv"
     ],
     "exclude_files": [
         ".gitignore",
@@ -15,10 +17,8 @@
         "requirements.txt",
         "setup.bat"
     ],
-    "include_folder": [
-    ],
-    "include_files": [
-    ],
+    "include_folder": [],
+    "include_files": [],
     "files": [
         {
             "filename": "ask_aoai_files_config.json",
